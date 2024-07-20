@@ -11,7 +11,7 @@ export default function Home(){
             <HeaderContainer>
                 <Feature>
                     <Feature.Title>
-                        Unlimited films, TV programs and more.
+                        Endless films, TV programs and more.
                     </Feature.Title>
                     <Feature.SubTitle>
                         Watch anywhere. Cancel at any time.
