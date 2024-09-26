@@ -4,8 +4,6 @@ FROM node:12
 # Set the working directory
 WORKDIR /usr/src/app
 
-RUN apt-get update && apt-get install -y git
-
 # Copy package.json and package-lock.json files
 COPY package*.json ./
 
