@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: devabayomi/netflix:latest
+  repository: devabayomi/netflix
   tag: latest
   pullPolicy: Always
 
