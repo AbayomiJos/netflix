@@ -9,7 +9,7 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     outputs:
-      image_tag: ${{ steps.build.outputs.image_tag }}
+      image_tag: ${{ steps.tag.outputs.image_tag }}
     steps:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -44,9 +44,9 @@ jobs:
       - name: Checkout Helm Charts repository
         uses: actions/checkout@v4
         with:
-          repository: https://github.com/AbayomiJos/helmchart  # Replace with your actual Helm repo (e.g., devabayomi/helm-charts)
-          ref: main                           # Replace with the branch you update (e.g., main or dev)
-          token: ${{ secrets.HELM_REPO_PAT }} # Create a PAT with repo access and add as secret
+          repository: AbayomiJos/helmchart
+          ref: main                          
+          token: ${{ secrets.HELM_REPO_PAT }}
 
       - name: Install yq
         run: |
@@ -56,14 +56,30 @@ jobs:
 
       - name: Update values.yaml with new image tag
         env:
-          NEW_TAG: ${{ needs.docker.outputs.image_tag }}  # Uses short SHA from previous job
+          NEW_TAG: ${{ needs.docker.outputs.image_tag }}
         run: |
-          # Adjust the path to your actual values.yaml
-          yq e '.image.tag = "'$NEW_TAG'"' -i values.yaml
-          # Or if nested: yq e '.image.version = "'$NEW_TAG'"' -i path/to/values.yaml
+          CHART_VALUES_FILE="netflix/values.yaml"
+
+          if [ ! -f "$CHART_VALUES_FILE" ]; then
+            if [ -f values.yaml ]; then
+              CHART_VALUES_FILE="values.yaml"
+            else
+              echo "Could not find a values.yaml file in the chart repo."
+              find . -maxdepth 3 -name values.yaml | head
+              exit 1
+            fi
+          fi
+
+          yq e '.image.tag = strenv(NEW_TAG)' -i "$CHART_VALUES_FILE"
 
           git config --global user.name 'github-actions'
           git config --global user.email 'actions@github.com'
-          git add .
-          git commit -m "Update image tag to ${{ needs.docker.outputs.image_tag }}"
+          git add "$CHART_VALUES_FILE"
+
+          if git diff --cached --quiet; then
+            echo "No chart change detected. Skipping commit."
+            exit 0
+          fi
+
+          git commit -m "Update image tag to $NEW_TAG"
           git push
