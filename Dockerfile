@@ -1,6 +1,6 @@
 FROM node:12
 
-# Set the working directory
+# Set the work directory
 WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json files
@@ -17,4 +17,3 @@ EXPOSE 3000
 
 # Start the application
 CMD ["npm", "start"]
-

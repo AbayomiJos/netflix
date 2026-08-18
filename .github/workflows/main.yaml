@@ -1,9 +1,11 @@
-name: netflix-ci
+name: netflix-app
 
 on:
   push:
     branches:
-      - main  # Adjust if your main branch has a different name
+      - main
+      - dev
+      - stage
 
 jobs:
   docker:
@@ -39,7 +41,7 @@ jobs:
   update-helm-chart:
     needs: docker
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'  # Change to your branch name if different
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout Helm Charts repository
         uses: actions/checkout@v4
