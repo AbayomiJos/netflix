@@ -44,8 +44,8 @@ jobs:
       - name: Checkout Helm Charts repository
         uses: actions/checkout@v4
         with:
-          repository: https://github.com/AbayomiJos/helmchart  # Replace with your actual Helm repo (e.g., devabayomi/helm-charts)
-          ref: main                           # Replace with the branch you update (e.g., main or dev)
+          repository: AbayomiJos/helmchart  # GitHub repo in {owner}/{repo} format
+          ref: main                          # Replace with the branch you update (e.g., main or dev)
           token: ${{ secrets.HELM_REPO_PAT }} # Create a PAT with repo access and add as secret
 
       - name: Install yq
