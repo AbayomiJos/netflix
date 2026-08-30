@@ -9,7 +9,7 @@ on:
 
 jobs:
   docker:
-    runs-on: netflix-fe
+    runs-on: ubuntu-latest
     outputs:
       image_tag: ${{ steps.tag.outputs.image_tag }}
     steps:
